@@ -29,6 +29,7 @@ class PackagingBoxesTest {
                 );
             }
         }
+
         @Nested
         class AndThereAreTwoItems{
             @Nested
@@ -43,10 +44,25 @@ class PackagingBoxesTest {
 
                 }
             }
+
             @Nested
-            class WithASize
+            class WithASizeAbove10{
+                @Test
+                void shouldReturnTwoBoxes(){
+                    assertAll(
+                            () -> assertEquals("5/6", packagingBoxes.optimize("56")),
+                            () -> assertEquals("2/9", packagingBoxes.optimize("29")),
+                            () -> assertEquals("4/8", packagingBoxes.optimize("48"))
+                    );
+                }
+            }
         }
 
+        @Nested
+        class AndThereAreThreeItems{
+            
+
+        }
 
     }
 
