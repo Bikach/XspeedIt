@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PackagingBoxesTest {
@@ -22,11 +21,7 @@ class PackagingBoxesTest {
         class AndThereIsOneItem{
             @Test
             void shouldReturnOneBox(){
-                assertAll(
-                        () -> assertEquals("1", packagingBoxes.optimize("1")),
-                        () -> assertEquals("5", packagingBoxes.optimize("5")),
-                        () -> assertEquals("9", packagingBoxes.optimize("9"))
-                );
+                assertEquals("1", packagingBoxes.optimize("1"));
             }
         }
 
@@ -36,12 +31,7 @@ class PackagingBoxesTest {
             class WithATotalSizeBelow10Included{
                 @Test
                 void shouldReturnOneBox(){
-                    assertAll(
-                            () -> assertEquals("54", packagingBoxes.optimize("54")),
-                            () -> assertEquals("27", packagingBoxes.optimize("27")),
-                            () -> assertEquals("64", packagingBoxes.optimize("64"))
-                    );
-
+                    assertEquals("54", packagingBoxes.optimize("54"));
                 }
             }
 
@@ -49,18 +39,17 @@ class PackagingBoxesTest {
             class WithASizeAbove10{
                 @Test
                 void shouldReturnTwoBoxes(){
-                    assertAll(
-                            () -> assertEquals("5/6", packagingBoxes.optimize("56")),
-                            () -> assertEquals("2/9", packagingBoxes.optimize("29")),
-                            () -> assertEquals("4/8", packagingBoxes.optimize("48"))
-                    );
+                    assertEquals("5/6", packagingBoxes.optimize("56"));
                 }
             }
         }
 
         @Nested
         class AndThereAreThreeItems{
-            
+            @Test
+            void shouldReturnTwoBox(){
+                assertEquals("64/4", packagingBoxes.optimize("644"));
+            }
 
         }
 
