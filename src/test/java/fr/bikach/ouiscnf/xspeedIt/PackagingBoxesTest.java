@@ -47,8 +47,18 @@ class PackagingBoxesTest {
         @Nested
         class AndThereAreThreeItems{
             @Test
-            void shouldReturnTwoBox(){
+            void shouldReturnTwoBoxWith2itemsAnd1Item(){
                 assertEquals("64/4", packagingBoxes.optimize("644"));
+            }
+
+            @Test
+            void shouldReturnTwoBoxWith1ItemAnd2Items(){
+                assertEquals("6/72", packagingBoxes.optimize("672"));
+            }
+
+            @Test
+            void shouldReturnThreeBoxWith1ItemEach(){
+                assertEquals("8/7/4", packagingBoxes.optimize("874"));
             }
 
         }

@@ -9,28 +9,31 @@ class PackagingBoxes {
 
     private static final int MAX_BOX_SIZE = 10;
     private static final String SEPARATOR = "/";
+    public static final int EMPTY = 0;
 
     private Deque<String> temporaryStock;
     private StringBuilder boxes;
+    private int boxSize = EMPTY;
 
     PackagingBoxes() {
         this.temporaryStock = new ArrayDeque<>();
-        boxes = new StringBuilder();
+        this.boxes = new StringBuilder();
     }
     //temporaryStock.add(sequenceItems.get(ITEM));
 
     String optimize(String items) {
         Deque<String> currentStock = toDeque(items);
-        boxes.append(currentStock.removeFirst());
+        boxes.append(currentStock.peekFirst());
+        boxSize += Integer.valueOf(currentStock.removeFirst());
 
-        if (isEmpty(currentStock, temporaryStock))
-            return boxes.toString();
+        if (isEmpty(currentStock, temporaryStock)) return boxes.toString();
 
-        String oldItem = currentStock.peekFirst();
+        boxSize += Integer.valueOf(currentStock.getFirst());
 
-        int boxSize = computeCurrentSizeBox(currentStock.getFirst(), oldItem);
-
-        if (boxSize > MAX_BOX_SIZE) boxes.append(SEPARATOR);
+        if ((boxSize > MAX_BOX_SIZE)) {
+            boxes.append(SEPARATOR);
+            boxSize = EMPTY;
+        }
 
         return optimize(String.join("",currentStock));
 
@@ -38,10 +41,6 @@ class PackagingBoxes {
 
     private boolean isEmpty(Deque<String> currentStock, Deque<String> temporaryStock) {
         return currentStock.peekFirst() == null && temporaryStock.peekFirst() == null;
-    }
-
-    private int computeCurrentSizeBox(String oldItem, String currentItem) {
-        return Integer.valueOf(oldItem) + Integer.valueOf(currentItem);
     }
 
     private ArrayDeque<String> toDeque(String items) {
