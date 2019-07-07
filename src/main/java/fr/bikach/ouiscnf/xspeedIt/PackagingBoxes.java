@@ -24,23 +24,22 @@ public class PackagingBoxes {
         Deque<Integer> smallerArticles = toArrayDeque(articles, SMALLER_THAN_MEDIUM_SIZE);
         Deque<Integer> greaterArticles = toArrayDeque(articles, GREATER_THAN_MEDIUM_SIZE);
         boxSize += getFirstArticle(smallerArticles, greaterArticles);
-        while (isNotEmpty(smallerArticles, greaterArticles)) {
+        while (isNotEmpty(smallerArticles, greaterArticles))
             fillABox(smallerArticles, greaterArticles);
-        }
         return boxes.toString();
     }
 
-    private ArrayDeque<Integer> toArrayDeque(String articles, String smallerOrGreater){
+    private ArrayDeque<Integer> toArrayDeque(String articles, String size){
         return articles
                 .chars()
                 .mapToObj(article -> Character.getNumericValue((char)article))
                 .sorted()
-                .filter(isRange(smallerOrGreater))
+                .filter(isRange(size))
                 .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    private Predicate<Integer> isRange(String position){
-        if (position.equals(GREATER_THAN_MEDIUM_SIZE))
+    private Predicate<Integer> isRange(String size){
+        if (size.equals(GREATER_THAN_MEDIUM_SIZE))
             return article -> article > MEDIUM_BOX_SIZE;
         return article -> article <= MEDIUM_BOX_SIZE;
     }
