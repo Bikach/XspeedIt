@@ -8,7 +8,7 @@ public class XspeedItApp {
 
         PackagingBoxes packagingBoxes = new PackagingBoxes();
 
-        String result = packagingBoxes.optimize("23961111235");
+        String result = packagingBoxes.optimize("239611547311235");
 
         System.out.println(result);
     }

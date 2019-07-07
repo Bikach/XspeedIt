@@ -64,12 +64,12 @@ class PackagingBoxesTest {
             assertEquals("82/73/64/235/334", packagingBoxes.optimize("262543473833"));
         }
 
+        @Test
+        void shouldReturnTheSameNumberOfBoxesAsTheExample() {
+            assertEquals("91/82/81/73/73/64/6/55", packagingBoxes.optimize("163841689525773"));
+        }
+
     }
 
-
-    @Test
-    void shouldReturnSameAnswerExample() {
-        assertEquals("91/82/81/73/73/64/6/55", packagingBoxes.optimize("163841689525773"));
-    }
 
 }
