@@ -1,51 +1,96 @@
 package fr.bikach.ouiscnf.xspeedIt;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class PackagingBoxes {
 
     private static final int MAX_BOX_SIZE = 10;
+    private static final int MEDIUM_BOX_SIZE = 5;
     private static final String SEPARATOR = "/";
-    public static final int EMPTY = 0;
+    private static final int EMPTY = 0;
+    private static final String GREATER_THAN_MEDIUM_SIZE = "more than 5";
+    private static final String SMALLER_THAN_MEDIUM_SIZE = "less than 5";
 
-    private Deque<String> temporaryStock;
     private StringBuilder boxes;
     private int boxSize = EMPTY;
 
     PackagingBoxes() {
-        this.temporaryStock = new ArrayDeque<>();
         this.boxes = new StringBuilder();
     }
-    //temporaryStock.add(sequenceItems.get(ITEM));
 
-    String optimize(String items) {
-        Deque<String> currentStock = toDeque(items);
-        boxes.append(currentStock.peekFirst());
-        boxSize += Integer.valueOf(currentStock.removeFirst());
+    String optimize(String articles) {
+        Deque<Integer> smallerStock = toArrayDeque(articles, SMALLER_THAN_MEDIUM_SIZE);
+        Deque<Integer> greaterStock = toArrayDeque(articles, GREATER_THAN_MEDIUM_SIZE);
+        boxSize += getFirstArticle(smallerStock, greaterStock);
+        if (isEmpty(smallerStock, greaterStock)) return boxes.toString();
 
-        if (isEmpty(currentStock, temporaryStock)) return boxes.toString();
-
-        boxSize += Integer.valueOf(currentStock.getFirst());
-
-        if ((boxSize > MAX_BOX_SIZE)) {
-            boxes.append(SEPARATOR);
-            boxSize = EMPTY;
+        while (!isEmpty(smallerStock, greaterStock)){
+            int currentArticle = getCurrentArticle(smallerStock);
+            if (currentArticle != EMPTY){
+                boxes.append(currentArticle);
+                smallerStock.remove(currentArticle);
+                addSeparatorIsNotEmpty(smallerStock);
+                addArticleIsNotEmpty(greaterStock);
+            }else{
+                if (boxSize + smallerStock.peekFirst() > MAX_BOX_SIZE){
+                    boxes.append(SEPARATOR);
+                    boxSize = EMPTY;
+                }
+                boxSize += smallerStock.peekFirst();
+                boxes.append(smallerStock.removeFirst());
+            }
         }
-
-        return optimize(String.join("",currentStock));
-
+        return boxes.toString();
     }
 
-    private boolean isEmpty(Deque<String> currentStock, Deque<String> temporaryStock) {
-        return currentStock.peekFirst() == null && temporaryStock.peekFirst() == null;
+    //82/73/64/523/3
+    //9
+
+    private ArrayDeque<Integer> toArrayDeque(String articles, String position){
+        return articles
+                .chars()
+                .mapToObj(article -> Character.getNumericValue((char)article))
+                .sorted()
+                .filter(is(position))
+                .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    private ArrayDeque<String> toDeque(String items) {
-        return Stream.of(items.split(""))
-                .collect(Collectors
-                        .toCollection(ArrayDeque::new));
+    private Predicate<Integer> is(String position){
+        if (position.equals(GREATER_THAN_MEDIUM_SIZE))
+            return article -> article >= MEDIUM_BOX_SIZE;
+        return article -> article < MEDIUM_BOX_SIZE;
+    }
+
+    private int getFirstArticle(Deque<Integer> smallerMediumStock, Deque<Integer> largerMediumStock) {
+        if(largerMediumStock.isEmpty()) {
+            boxes.append(smallerMediumStock.peekLast());
+            return smallerMediumStock.removeLast();
+        }
+        boxes.append(largerMediumStock.peekLast());
+        return largerMediumStock.removeLast();
+    }
+
+    private boolean isEmpty(Deque<Integer> smallerStock, Deque<Integer> greaterStock){
+        return smallerStock.isEmpty() && greaterStock.isEmpty();
+    }
+
+    private Integer getCurrentArticle(Deque<Integer> smallerStock) {
+        return smallerStock.stream()
+        .filter(article -> article + boxSize == MAX_BOX_SIZE)
+        .findAny().orElse(EMPTY);
+    }
+
+    private void addSeparatorIsNotEmpty(Deque<Integer> smallerStock) {
+        if(!smallerStock.isEmpty())
+            boxes.append(SEPARATOR);
+    }
+
+    private void addArticleIsNotEmpty(Deque<Integer> greaterStock) {
+        if (!greaterStock.isEmpty()){
+            boxSize = greaterStock.peekLast();
+            boxes.append(greaterStock.removeLast());
+        }
     }
 }

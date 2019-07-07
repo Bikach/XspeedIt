@@ -15,54 +15,64 @@ class PackagingBoxesTest {
         packagingBoxes = new PackagingBoxes();
     }
 
+
     @Nested
-    class WhenTheSequenceIsOrdered{
-        @Nested
-        class AndThereIsOneItem{
-            @Test
-            void shouldReturnOneBox(){
-                assertEquals("1", packagingBoxes.optimize("1"));
-            }
+    class OnlyOneArticle {
+        @Test
+        void shouldReturnOneBoxWhenTheSizeArticleIsSmallerThanMediumSize(){
+            assertEquals("1", packagingBoxes.optimize("1"));
         }
 
-        @Nested
-        class AndThereAreTwoItems{
-            @Nested
-            class WithATotalSizeBelow10Included{
-                @Test
-                void shouldReturnOneBox(){
-                    assertEquals("54", packagingBoxes.optimize("54"));
-                }
-            }
+        @Test
+        void shouldReturnOneBoxWhenTheSizeArticleIsGreaterThanMediumSize(){
+            assertEquals("6", packagingBoxes.optimize("6"));
+        }
+    }
 
-            @Nested
-            class WithASizeAbove10{
-                @Test
-                void shouldReturnTwoBoxes(){
-                    assertEquals("5/6", packagingBoxes.optimize("56"));
-                }
-            }
+    @Nested
+    class TwoArticles {
+        @Test
+        void shouldReturnOneBoxWhenTheTotalSizeArticlesIsSmallerThanMediumSize(){
+            assertEquals("43", packagingBoxes.optimize("34"));
         }
 
-        @Nested
-        class AndThereAreThreeItems{
-            @Test
-            void shouldReturnTwoBoxWith2itemsAnd1Item(){
-                assertEquals("64/4", packagingBoxes.optimize("644"));
-            }
+        @Test
+        void shouldReturnTwoBoxWhenTheTotalSizeArticlesIsGreaterThanMediumSize(){
+            assertEquals("8/3", packagingBoxes.optimize("38"));
+        }
+    }
 
-            @Test
-            void shouldReturnTwoBoxWith1ItemAnd2Items(){
-                assertEquals("6/72", packagingBoxes.optimize("672"));
-            }
+    @Nested
+    class MoreThreeArticles{
+        @Test
+        void shouldReturnOneBoxWhenTheTotalSizeArticlesIsSmallerThanMediumSize() {
+            assertEquals("41113", packagingBoxes.optimize("31114"));
+        }
 
-            @Test
-            void shouldReturnThreeBoxWith1ItemEach(){
-                assertEquals("8/7/4", packagingBoxes.optimize("874"));
-            }
+        @Test
+        void shouldReturnTwoBoxesWhenTheTotalSizeOfALotOfArticlesIsGreaterThanMediumSize() {
+            assertEquals("523/2", packagingBoxes.optimize("2253"));
+        }
 
+        @Test
+        void shouldReturnThreeBoxesWhenTheTotalSizeOfTwoLotsOfArticlesIsGreaterThanMediumSize() {
+            assertEquals("64/523/2", packagingBoxes.optimize("262543"));
+        }
+
+        @Test
+        void shouldReturnFourBoxes() {
+            assertEquals("82/73/64/523/334", packagingBoxes.optimize("262543473833"));
         }
 
     }
+
+
+    /*@Test
+    void shouldReturnSameAnswerExample() {
+        assertEquals("91/82/81/73/73/64/55", packagingBoxes.optimize("163841689525773"));
+    }*/
+    //112334 556677889
+    //91/82/8/73/73/64/55/61
+    //9/84
 
 }
