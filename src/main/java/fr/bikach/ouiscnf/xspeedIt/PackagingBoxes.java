@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class PackagingBoxes {
+public class PackagingBoxes {
 
     private static final int MAX_BOX_SIZE = 10;
     private static final int MEDIUM_BOX_SIZE = 5;
@@ -16,15 +16,14 @@ class PackagingBoxes {
     private StringBuilder boxes;
     private int boxSize = EMPTY;
 
-    PackagingBoxes() {
+    public PackagingBoxes() {
         this.boxes = new StringBuilder();
     }
 
-    String optimize(String articles) {
+    public String optimize(String articles) {
         Deque<Integer> smallerStock = toArrayDeque(articles, SMALLER_THAN_MEDIUM_SIZE);
         Deque<Integer> greaterStock = toArrayDeque(articles, GREATER_THAN_MEDIUM_SIZE);
         boxSize += getFirstArticle(smallerStock, greaterStock);
-        if (isEmpty(smallerStock, greaterStock)) return boxes.toString();
 
         while (!isEmpty(smallerStock, greaterStock)){
             int currentArticle = getCurrentArticle(smallerStock);
@@ -33,20 +32,16 @@ class PackagingBoxes {
                 smallerStock.remove(currentArticle);
                 addSeparatorIsNotEmpty(smallerStock);
                 addArticleIsNotEmpty(greaterStock);
-            }else{
-                if (boxSize + smallerStock.peekFirst() > MAX_BOX_SIZE){
+            }else if (boxSize + smallerStock.peekFirst() > MAX_BOX_SIZE){
                     boxes.append(SEPARATOR);
-                    boxSize = EMPTY;
-                }
+                    addArticleIsNotEmpty(greaterStock);
+            }else {
                 boxSize += smallerStock.peekFirst();
                 boxes.append(smallerStock.removeFirst());
             }
         }
         return boxes.toString();
     }
-
-    //82/73/64/523/3
-    //9
 
     private ArrayDeque<Integer> toArrayDeque(String articles, String position){
         return articles
@@ -59,8 +54,8 @@ class PackagingBoxes {
 
     private Predicate<Integer> is(String position){
         if (position.equals(GREATER_THAN_MEDIUM_SIZE))
-            return article -> article >= MEDIUM_BOX_SIZE;
-        return article -> article < MEDIUM_BOX_SIZE;
+            return article -> article > MEDIUM_BOX_SIZE;
+        return article -> article <= MEDIUM_BOX_SIZE;
     }
 
     private int getFirstArticle(Deque<Integer> smallerMediumStock, Deque<Integer> largerMediumStock) {
@@ -91,6 +86,7 @@ class PackagingBoxes {
         if (!greaterStock.isEmpty()){
             boxSize = greaterStock.peekLast();
             boxes.append(greaterStock.removeLast());
-        }
+        }else
+            boxSize = EMPTY;
     }
 }

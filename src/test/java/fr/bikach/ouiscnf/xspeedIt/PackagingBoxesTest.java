@@ -56,23 +56,20 @@ class PackagingBoxesTest {
 
         @Test
         void shouldReturnThreeBoxesWhenTheTotalSizeOfTwoLotsOfArticlesIsGreaterThanMediumSize() {
-            assertEquals("64/523/2", packagingBoxes.optimize("262543"));
+            assertEquals("64/223/5", packagingBoxes.optimize("262543"));
         }
 
         @Test
         void shouldReturnFourBoxes() {
-            assertEquals("82/73/64/523/334", packagingBoxes.optimize("262543473833"));
+            assertEquals("82/73/64/235/334", packagingBoxes.optimize("262543473833"));
         }
 
     }
 
 
-    /*@Test
+    @Test
     void shouldReturnSameAnswerExample() {
-        assertEquals("91/82/81/73/73/64/55", packagingBoxes.optimize("163841689525773"));
-    }*/
-    //112334 556677889
-    //91/82/8/73/73/64/55/61
-    //9/84
+        assertEquals("91/82/81/73/73/64/6/55", packagingBoxes.optimize("163841689525773"));
+    }
 
 }
