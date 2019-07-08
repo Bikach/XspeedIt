@@ -1,14 +1,14 @@
 package fr.bikach.ouiscnf;
 
-import fr.bikach.ouiscnf.xspeedIt.PackagingBoxes;
+import fr.bikach.ouiscnf.xspeedIt.BoxCounter;
 
 public class XspeedItApp {
 
     public static void main( String[] args ) {
 
-        PackagingBoxes packagingBoxes = new PackagingBoxes();
+        BoxCounter boxCounter = new BoxCounter();
 
-        String result = packagingBoxes.optimize("239611547311235");
+        String result = boxCounter.optimize("2396127733662374631983745327366328743229874325311235");
 
         System.out.println(result);
     }

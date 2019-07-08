@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class PackagingBoxes {
+public class BoxCounter {
 
     private static final int MAX_BOX_SIZE = 10;
     private static final int MEDIUM_BOX_SIZE = 5;
@@ -16,16 +16,16 @@ public class PackagingBoxes {
     private StringBuilder boxes;
     private int boxSize = 0;
 
-    public PackagingBoxes() {
+    public BoxCounter() {
         this.boxes = new StringBuilder();
     }
 
     public String optimize(String articles) {
-        Deque<Integer> smallerArticles = toArrayDeque(articles, SMALLER_THAN_MEDIUM_SIZE);
-        Deque<Integer> greaterArticles = toArrayDeque(articles, GREATER_THAN_MEDIUM_SIZE);
-        boxSize += getFirstArticle(smallerArticles, greaterArticles);
-        while (isNotEmpty(smallerArticles, greaterArticles))
-            fillABox(smallerArticles, greaterArticles);
+        Deque<Integer> smallArticles = toArrayDeque(articles, SMALLER_THAN_MEDIUM_SIZE);
+        Deque<Integer> greatArticles = toArrayDeque(articles, GREATER_THAN_MEDIUM_SIZE);
+        boxSize += getFirstArticle(smallArticles, greatArticles);
+        while (isNotEmpty(smallArticles, greatArticles))
+            fillABox(smallArticles, greatArticles);
         return boxes.toString();
     }
 
